@@ -1,10 +1,10 @@
 
 exports.seed = function(knex) {
   // Deletes ALL existing entries
-  return knex('table_name').del()
+  return knex('Volunteer').truncate()
     .then(function () {
       // Inserts seed entries
-      return knex('table_name').insert([
+      return knex('Volunteer').insert([
         { id: 1, 
           email: 'food@pantry.org', // password "pantry"
           password: '$2y$12$ZBzUownqQbZomwwpHXXYNe6scDVStWtE/7gec2ZI0sqwog6DK1zPW',

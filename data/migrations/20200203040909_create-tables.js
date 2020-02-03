@@ -29,14 +29,13 @@ exports.up = function(knex) {
         tbl.timestamp('delivered').defaultTo(null);
         tbl.integer('volunteer_id')
           .unsigned()
-          .notNullable()
           .references('id')
           .inTable('Volunteer')
           .onDelete('RESTRICT')
           .onUpdate('CASCADE');
         tbl.integer('business_id')
           .unsigned()
-          .notNullable() // FIXME: Does this need to be removd?
+          .notNullable()
           .references('id')
           .inTable('Business')
           .onDelete('RESTRICT') // What happens if this ID is deleted.
