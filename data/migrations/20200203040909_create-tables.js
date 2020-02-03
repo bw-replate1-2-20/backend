@@ -42,7 +42,7 @@ exports.up = function(knex) {
           .onDelete('RESTRICT') // What happens if this ID is deleted.
           .onUpdate('CASCADE'); // What happens if this ID changes.
       });                       // CASCADE, SET NULL, DO NOTHING, RESTRICT
-};table.timestamp('created_at').defaultTo(knex.fn.now())
+};
 
 exports.down = function(knex) {
   return knex.schema
