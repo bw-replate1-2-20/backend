@@ -10,6 +10,6 @@ get http://localhost:6000/api/businesses
 ###
 get http://localhost:6000/api/requests
 ###
-# get http://localhost:6000/
+get https://replate-food-reuse.herokuapp.com/api/requests
 ###
 # get http://localhost:6000/
