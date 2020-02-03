@@ -36,7 +36,7 @@ exports.up = function(knex) {
           .onUpdate('CASCADE');
         tbl.integer('business_id')
           .unsigned()
-          .notNullable()
+          .notNullable() // FIXME: Does this need to be removd?
           .references('id')
           .inTable('Business')
           .onDelete('RESTRICT') // What happens if this ID is deleted.
