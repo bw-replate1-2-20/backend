@@ -89,7 +89,12 @@ router.post('/login/volunteer', (req, res) => {
       if( user && password &&
           bcrypt.compareSync(password, user.password)) {
         const token = signToken(user);
-        res.status(200).json({ id: user.id, token });
+        res.status(200).json({ 
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          phone: user.phone,
+          token });
       }
       else {
         res.status(401).json({ message: "You shall not pass!" });
@@ -111,7 +116,14 @@ router.post('/login/business', (req, res) => {
       if( user && password &&
           bcrypt.compareSync(password, user.password)) {
         const token = signToken(user);
-        res.status(200).json({ id: user.id, token });
+        res.status(200).json({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          address: user.address,
+          description: user.description,
+          phone: user.phone,
+          token });
       }
       else {
         res.status(401).json({ message: "You shall not pass!" });
