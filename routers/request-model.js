@@ -2,10 +2,11 @@ const db = require('../data/db-config.js');
 
 module.exports = {
   add,
-//  remove, // TODO
   find,
   findBy,
-  findById
+  findById,
+  update,
+  remove
 }
 
 function find() {
@@ -27,7 +28,14 @@ async function add(request) {
   return findById(id);
 }
 
-// async function remove(request) {
-//   const [id] = await db('request').delete(request);
-//   return findById(id);
-// }
+async function update(id, requestData) {
+  return await db('request')
+    .where({id})
+    .update(requestData);
+}
+
+async function remove(id) { // TODO: Return item? Currently 0 or 1.
+  return await db('request')
+    .where({id})
+    .del();
+}

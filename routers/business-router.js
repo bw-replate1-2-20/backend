@@ -24,4 +24,35 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const businessData = req.body;
+
+  // TODO: handle password changes
+
+  Businesses.update(id, businessData)
+    .then(business => {
+      res.status(200).json(business);
+    })
+    .catch (err => {
+      console.log(err);
+      res.status(500).json({ message: `Business update error: ${err}`});
+    });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+
+  Businesses.remove(id)
+    .then(business => {
+      res.status(200).json(business);
+    })
+    .catch (err => {
+      console.log(err);
+      res.status(500).json({ message: `Business could not be deleted: ${err}`})
+    });
+  // TODO: what to return?
+});
+
+
 module.exports = router;

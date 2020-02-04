@@ -1,16 +1,27 @@
-# get http://localhost:6000/
-###
-# get http://localhost:6000/api
-###
+#### GET requests
 get http://localhost:6000/api/auth
 ###
-get http://localhost:6000/api/volunteers
+get http://localhost:6000/api/volunteers/2
 ###
-get http://localhost:6000/api/businesses
+get http://localhost:6000/api/businesses/2
 ###
-get http://localhost:6000/api/requests
+get http://localhost:6000/api/requests/2
 
-######
+#### DELETE requests
+delete http://localhost:6000/api/volunteers/7
+###
+delete http://localhost:6000/api/businesses/7
+###
+delete http://localhost:6000/api/requests/7
+
+
+###### REMOTE #######
 get https://replate-food-reuse.herokuapp.com/api/requests
 ###
-# get http://localhost:6000/
+get http://replate-food-reuse.herokuapp.com/api/volunteers/
+###
+get http://replate-food-reuse.herokuapp.com/api/businesses/
+###
+get http://replate-food-reuse.herokuapp.com/api/requests/2
+###
+get http://localhost:6000/api/auth

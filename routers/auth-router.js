@@ -11,16 +11,16 @@ router.get('/', (req, res) => {
 })
 
 
-// -------------- Registration --------------
+// =============== Registration ===============
 
+// ------ Volunteer -------
 router.post('/register/volunteer', (req, res) => {
   let user = req.body;
 
-  if ( !user.email ||
-       !user.password ||
-       !user.name ||
-       !user.phone) {
-
+  if( !user.email ||
+      !user.password ||
+      !user.name ||
+      !user.phone) {
         res.status(400).json({ message: "Missing required fields"});
   }
 
@@ -29,10 +29,13 @@ router.post('/register/volunteer', (req, res) => {
 
   Volunteer.add(user)
   .then(saved => {
-      res.status(201).json( {
+    const token = signToken(saved);
+      res.status(201).json({
         id: saved.id,
         email: saved.email,
-        // Don't send password back.
+        name: saved.name,
+        phone: saved.phone,
+        token,
       });
   })
   .catch(error => {
@@ -40,10 +43,9 @@ router.post('/register/volunteer', (req, res) => {
   });
 });
 
+// ------- Business ---------
 router.post('/register/business', (req, res) => {
   let user = req.body;
-
-  console.log(user);
 
   if( !user.email ||
       !user.password ||
@@ -51,8 +53,7 @@ router.post('/register/business', (req, res) => {
       !user.address ||
       !user.description ||
       !user.phone) {
-
-     res.status(400).json({ message: "Missing required fields"});
+      res.status(400).json({ message: "Missing required fields"});
 }
 
   const hash = bcrypt.hashSync(user.password, 10); // 2 ^ n
@@ -60,10 +61,15 @@ router.post('/register/business', (req, res) => {
 
   Business.add(user)
   .then(saved => {
-      res.status(201).json( {
+    const token = signToken(saved);
+      res.status(201).json({
         id: saved.id,
         email: saved.email,
-        // Don't send password back.
+        name: saved.name,
+        address: saved.address,
+        description: saved.description,
+        phone: saved.phone,
+        token,
       });
   })
   .catch(error => {
@@ -71,8 +77,8 @@ router.post('/register/business', (req, res) => {
   });
 });
 
-// -------------- Login --------------
-
+// ================ Login ==================
+// ------ Volunteer -----
 router.post('/login/volunteer', (req, res) => {
   // implement login
   let { email, password } = req.body;
@@ -95,6 +101,7 @@ router.post('/login/volunteer', (req, res) => {
     });
 });
 
+// ------- Business -------
 router.post('/login/business', (req, res) => {
   let { email, password } = req.body;
 
@@ -116,6 +123,8 @@ router.post('/login/business', (req, res) => {
     });
 });
 
+// ========== Helper functions ===========
+
 function signToken(user) {
   const payload = {
     sub: user.id,
@@ -126,6 +135,5 @@ function signToken(user) {
   };
   return jwt.sign(payload, jwtSecret, options);
 }
-
 
 module.exports = router;

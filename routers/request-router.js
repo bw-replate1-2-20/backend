@@ -34,4 +34,49 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.post('/', (req, res) => {
+  let requestData = req.body;
+
+  // TODO: Add error checking. Add time stamps
+
+  Requests.add(requestData)
+    .then(request => {
+      res.status(201).json(request);
+    })
+    .catch (err => {
+      res.status(500).json({ message: 'Failed to create new request' });
+    });
+});
+
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const requestData = req.body;
+
+  // TODO: handle password changes
+  
+  Requests.update(id, body)
+    .then(request => {
+      res.status(200).json(request);
+    })
+    .catch (err => {
+      console.log(err);
+      res.status(500).json({ message: `Delivery request update error: ${err}`})
+    })
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+
+  Requests.remove(id)
+    .then(request => {
+      res.status(200).json(request);
+    })
+    .catch (err => {
+      console.log(err);
+      res.status(500).json({ message: `Delivery request could not be deleted: ${err}`})
+    });
+  // TODO: what to return?
+});
+
+
 module.exports = router;

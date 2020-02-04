@@ -24,4 +24,30 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const requestData = req.body;
+  Volunteers.update(id, body)
+    .then(volunteer => {
+      res.status(200).json(volunteer);
+    })
+    .catch (err => {
+      console.log(err);
+      res.status(500).json({ message: `Delivery request update error: ${err}`})
+    });
+});
+
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  Volunteers.remove(id)
+    .then(volunteer => {
+      res.status(200).json(volunteer);
+    })
+    .catch (err => {
+      console.log(err);
+      res.status(500).json({ message: `Delivery request could not be deleted: ${err}`});
+    });
+  // TODO: what to return?
+});
+
 module.exports = router;
