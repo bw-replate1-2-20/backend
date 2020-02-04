@@ -26,7 +26,11 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   Requests.findById(id)
     .then(request => {
-      res.json(request);
+      console.log(request);
+      if (request)
+        res.json(request);
+      else
+        res.status(400).json({ message: "ID not found" });
     })
     .catch(err => {
       console.log(`Error getting delivery request #${id}: ${err}`);
@@ -52,12 +56,18 @@ router.put('/:id', (req, res) => {
   const { id } = req.params;
   const requestData = req.body;
 
-  // TODO: handle password changes
-  
-  Requests.update(id, body)
+  Requests.update(id, requestData)
     .then(request => {
-      res.status(200).json(request);
-    })
+      Requests.findById(id)
+        .then(newItem => {
+          console.log(newItem);
+          res.status(200).json(newItem);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json({ message: `New delivery request retrieval error: ${err}`});
+        });
+      })
     .catch (err => {
       console.log(err);
       res.status(500).json({ message: `Delivery request update error: ${err}`})
@@ -67,9 +77,22 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
 
+  // Requests.findById(id)
+  // .then(newItem => {
+  //   console.log(newItem);
+  //   res.status(200).json(newItem);
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  //   res.status(500).json({ message: `New delivery request retrieval error: ${err}`});
+  // });
+
   Requests.remove(id)
     .then(request => {
-      res.status(200).json(request);
+      if (request)
+        res.status(200).json({ message: `ID ${id} successfully deleted`});
+      else
+        res.status(400).json({ message: 'ID not found'});
     })
     .catch (err => {
       console.log(err);

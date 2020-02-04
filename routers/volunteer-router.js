@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const Volunteers = require('./volunteer-model.js');
 
-
 router.get('/', (req, res) => {
   Volunteers.find()
     .then(volunteers => {
@@ -16,7 +15,10 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   Volunteers.findById(id)
     .then(volunteer => {
-      res.json(volunteer);
+      if (volunteer)
+        res.json(volunteer);
+      else
+        res.status(400).json({ message: "ID not found" });
     })
     .catch(err => {
       console.log(`Error getting volunteer #${id}: ${err}`);
@@ -29,7 +31,10 @@ router.put('/:id', (req, res) => {
   const requestData = req.body;
   Volunteers.update(id, body)
     .then(volunteer => {
-      res.status(200).json(volunteer);
+      if (volunteer)
+        res.status(200).json(volunteer)
+      else
+        res.status(400).json({ message: "ID not found" });
     })
     .catch (err => {
       console.log(err);
@@ -41,7 +46,10 @@ router.delete('/:id', (req, res) => {
   const { id } = req.params;
   Volunteers.remove(id)
     .then(volunteer => {
-      res.status(200).json(volunteer);
+      if(volunteer)
+        res.status(200).json({ message: `ID ${id} successfully deleted`});
+      else
+        res.status(400).json({ message: "ID not found" });
     })
     .catch (err => {
       console.log(err);

@@ -16,7 +16,10 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   Businesses.findById(id)
     .then(business => {
-      res.json(business);
+      if(business)
+        res.json(business);
+      else
+        res.status(400).json({ message: "ID not found" });
     })
     .catch(err => {
       console.log(`Error getting business #${id}: ${err}`);
@@ -32,7 +35,8 @@ router.put('/:id', (req, res) => {
 
   Businesses.update(id, businessData)
     .then(business => {
-      res.status(200).json(business);
+      const newItem = Businesses.findById(id);
+      res.status(200).json(newItem);
     })
     .catch (err => {
       console.log(err);
@@ -45,7 +49,10 @@ router.delete('/:id', (req, res) => {
 
   Businesses.remove(id)
     .then(business => {
-      res.status(200).json(business);
+      if (business)
+        res.status(200).json(business);
+      else
+        res.status(400).json({ message: "ID not found" });
     })
     .catch (err => {
       console.log(err);
