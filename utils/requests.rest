@@ -5,14 +5,14 @@ get http://localhost:6000/api/volunteers/2
 ###
 get http://localhost:6000/api/businesses/2
 ###
-get http://localhost:6000/api/requests/2
+get http://localhost:6000/api/requests/3
 
 #### DELETE requests
-delete http://localhost:6000/api/volunteers/7
+delete http://localhost:6000/api/volunteers/10
 ###
-delete http://localhost:6000/api/businesses/7
+delete http://localhost:6000/api/businesses/10
 ###
-delete http://localhost:6000/api/requests/7
+delete http://localhost:6000/api/requests/6
 
 
 ###### REMOTE #######
