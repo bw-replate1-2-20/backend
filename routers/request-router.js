@@ -1,15 +1,38 @@
 const router = require('express').Router();
 const Requests = require('./request-model.js');
+const jwt = require('jsonwebtoken');
 
+const VOLUNTEER = 'V';
+const BUSINESS  = 'B';
 
-router.get('/', (req, res) => { // TODO: Filter by logged-in user
-  Requests.find()
-    .then(requests => {
-      res.json(requests);
-    })
-    .catch(err => {
-      res.status(500).json({ message: 'Failed to get delivery requests.'});
-    });
+router.get('/', (req, res) => {
+  const token = req.headers.authorization;
+  const decoded = jwt.decode(token, {complete: true});
+  console.log(decoded);
+  const role = decoded.payload.role;
+  const current_id = decoded.payload.sub;
+
+  if (role === BUSINESS) {
+    Requests.findBy({ business_id: current_id })
+      .then(requests => {
+        res.json(requests);
+      })
+      .catch(err => {
+        res.status(500).json({ message: 'Failed to get delivery requests.'});
+      });
+  }
+  else if (role === VOLUNTEER) {
+    Requests.findBy({ volunteer_id: current_id })
+      .then(requests => {
+        res.json(requests);
+      })
+      .catch(err => {
+        res.status(500).json({ message: 'Failed to get delivery requests.'});
+      });
+  }
+  else {
+    res.status(400).json({ message: 'Invalid token' });
+  }
 });
 
 router.get('/all', (req, res) => {
@@ -41,7 +64,7 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   let requestData = req.body;
 
-  // TODO: Add error checking. Add time stamps
+  // TODO: Add error checking.
 
   Requests.add(requestData)
     .then(request => {
@@ -76,17 +99,7 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-
-  // Requests.findById(id)
-  // .then(newItem => {
-  //   console.log(newItem);
-  //   res.status(200).json(newItem);
-  // })
-  // .catch(err => {
-  //   console.log(err);
-  //   res.status(500).json({ message: `New delivery request retrieval error: ${err}`});
-  // });
-
+  
   Requests.remove(id)
     .then(request => {
       if (request)
@@ -98,7 +111,6 @@ router.delete('/:id', (req, res) => {
       console.log(err);
       res.status(500).json({ message: `Delivery request could not be deleted: ${err}`})
     });
-  // TODO: what to return?
 });
 
 

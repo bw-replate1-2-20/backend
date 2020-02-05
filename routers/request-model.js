@@ -34,7 +34,7 @@ async function update(id, requestData) {
     .update(requestData);
 }
 
-async function remove(id) { // TODO: Return item? Currently 0 or 1.
+async function remove(id) {
   return await db('request')
     .where({id})
     .del();

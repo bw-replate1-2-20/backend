@@ -10,6 +10,8 @@ router.get('/', (req, res) => {
   res.status(200).json({message: 'Auth router is functioning.'});
 })
 
+const VOLUNTEER = 'V';
+const BUSINESS  = 'B';
 
 // =============== Registration ===============
 
@@ -29,7 +31,7 @@ router.post('/register/volunteer', (req, res) => {
 
   Volunteer.add(user)
   .then(saved => {
-    const token = signToken(saved);
+    const token = signToken(saved, VOLUNTEER);
       res.status(201).json({
         id: saved.id,
         email: saved.email,
@@ -61,7 +63,7 @@ router.post('/register/business', (req, res) => {
 
   Business.add(user)
   .then(saved => {
-    const token = signToken(saved);
+    const token = signToken(saved, BUSINESS);
       res.status(201).json({
         id: saved.id,
         email: saved.email,
@@ -88,7 +90,7 @@ router.post('/login/volunteer', (req, res) => {
     .then(user => {
       if( user && password &&
           bcrypt.compareSync(password, user.password)) {
-        const token = signToken(user);
+        const token = signToken(user, VOLUNTEER);
         res.status(200).json({ 
           id: user.id,
           email: user.email,
@@ -115,7 +117,7 @@ router.post('/login/business', (req, res) => {
     .then(user => {
       if( user && password &&
           bcrypt.compareSync(password, user.password)) {
-        const token = signToken(user);
+        const token = signToken(user, BUSINESS);
         res.status(200).json({
           id: user.id,
           email: user.email,
@@ -137,9 +139,10 @@ router.post('/login/business', (req, res) => {
 
 // ========== Helper functions ===========
 
-function signToken(user) {
+function signToken(user, role) {
   const payload = {
     sub: user.id,
+    role: role,
     email: user.email
   };
   const options = {
