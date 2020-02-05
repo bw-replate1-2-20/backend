@@ -5,7 +5,7 @@ get http://localhost:6000/api/volunteers/2
 ###
 get http://localhost:6000/api/businesses/2
 ###
-get http://localhost:6000/api/requests/3
+get http://localhost:6000/api/requests/
 
 #### DELETE requests
 delete http://localhost:6000/api/volunteers/10

@@ -15,8 +15,8 @@ server.use(cors());
 server.use(express.json());
 
 server.use('/api/auth', authRouter);
-server.use('/api/businesses', /* authenticate, */ businessRouter);
-server.use('/api/volunteers', /* authenticate, */ volunteerRouter);
-server.use('/api/requests', /* authenticate, */ requestRouter);
+server.use('/api/businesses', authenticate, businessRouter);
+server.use('/api/volunteers', authenticate, volunteerRouter);
+server.use('/api/requests', authenticate, requestRouter);
 
 module.exports = server;

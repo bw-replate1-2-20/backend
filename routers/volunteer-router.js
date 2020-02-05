@@ -55,7 +55,6 @@ router.delete('/:id', (req, res) => {
       console.log(err);
       res.status(500).json({ message: `Delivery request could not be deleted: ${err}`});
     });
-  // TODO: what to return?
 });
 
 module.exports = router;

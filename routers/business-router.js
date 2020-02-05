@@ -50,7 +50,7 @@ router.delete('/:id', (req, res) => {
   Businesses.remove(id)
     .then(business => {
       if (business)
-        res.status(200).json(business);
+      res.status(200).json({ message: `ID ${id} successfully deleted`});
       else
         res.status(400).json({ message: "ID not found" });
     })
@@ -58,7 +58,6 @@ router.delete('/:id', (req, res) => {
       console.log(err);
       res.status(500).json({ message: `Business could not be deleted: ${err}`})
     });
-  // TODO: what to return?
 });
 
 
