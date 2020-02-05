@@ -7,7 +7,7 @@ exports.up = function(knex) {
         tbl.string('email', 255).notNullable().unique();
         tbl.string('password', 255).notNullable();
         tbl.string('name', 255).notNullable();
-        tbl.string('phone', 32);
+        tbl.string('phone', 32).notNullable();
       })
       .createTable('Business', tbl => {
         tbl.increments();
@@ -24,9 +24,9 @@ exports.up = function(knex) {
         tbl.string('title', 255).notNullable();
         tbl.string('description', 2048).notNullable();
         tbl.string('quantity', 512).notNullable();
-        tbl.timestamp('ready_by').defaultTo(knex.fn.now());
-        tbl.timestamp('picked_up').defaultTo(null);
-        tbl.timestamp('delivered').defaultTo(null);
+        tbl.integer('ready_by').defaultTo(null);
+        tbl.integer('picked_up').defaultTo(null);
+        tbl.integer('delivered').defaultTo(null);
         tbl.integer('volunteer_id')
           .unsigned()
           .references('id')
