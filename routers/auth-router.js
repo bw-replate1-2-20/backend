@@ -99,7 +99,7 @@ router.post('/login/volunteer', (req, res) => {
           token });
       }
       else {
-        res.status(401).json({ message: "You shall not pass!" });
+        res.status(401).json({ message: "Invalid login" });
       }
     })
     .catch(error => {
@@ -128,7 +128,7 @@ router.post('/login/business', (req, res) => {
           token });
       }
       else {
-        res.status(401).json({ message: "You shall not pass!" });
+        res.status(401).json({ message: "Invalid login" });
       }
     })
     .catch(error => {

@@ -34,10 +34,21 @@ router.put('/:id', (req, res) => {
   // TODO: handle password changes
 
   Businesses.update(id, businessData)
+    // .then(business => {
+    //   const newItem = Businesses.findById(id);
+    //   res.status(200).json(newItem);
+    // })
     .then(business => {
-      const newItem = Businesses.findById(id);
-      res.status(200).json(newItem);
-    })
+      Businesses.findById(id)
+        .then(newItem => {
+          console.log(newItem);
+          res.status(200).json(newItem);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).json({ message: `Updated business retrieval error: ${err}`});
+        });
+    })    
     .catch (err => {
       console.log(err);
       res.status(500).json({ message: `Business update error: ${err}`});
