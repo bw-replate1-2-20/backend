@@ -6,19 +6,10 @@ const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/secrets');
 
 const authenticate = require("../middleware/auth-jest.js");
-const businessRouter = ('./business-router.js');
+const requestRouter = ('./request-router.js');
 
-// EITHER OF THESE LINES CAUSE ALL TESTS TO FAIL.
-// jest.mock("../middleware/auth-jest.js");
 beforeEach(() => db.seed.run());
-
-
-describe('businessRouter', function() {
-
-  // THIS BLOCK ALSO MAKES EVERY TEST FAIL
-//   beforeEach(async () => {
-//     await db('Business').truncate();
-//   }); // FIXME: reset database
+describe('requestRouter', function() {
 
   it('runs the tests', function() {
     expect(true).toBe(true);
@@ -31,9 +22,9 @@ describe('businessRouter', function() {
   });
 
   describe('GET /', function() {
-    it('missing token should return 401 Forbidden', function() {
+    it('missing token should return 401 Forbidden', async function() {
       // make a GET request to /
-      return request(server).get('/api/businesses')
+      return await request(server).get('/api/requests')
         .then(res => {
         // check that the status code is 401
         expect(res.status).toBe(401);
@@ -44,7 +35,7 @@ describe('businessRouter', function() {
       // authenticate.mockImplementationOnce((req, res, next) => {
       //   next();
       // }) // TODO: Why is this suggested?
-      const res = await request(server).get('/api/businesses')
+      const res = await request(server).get('/api/requests')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -55,7 +46,7 @@ describe('businessRouter', function() {
 
   describe('GET /:id', function() {
     it('valid id should return 200 OK', async function() {
-      const res = await request(server).get('/api/businesses/3')
+      const res = await request(server).get('/api/requests/3')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -64,20 +55,18 @@ describe('businessRouter', function() {
     });
 
     it('valid id should return correct information', async function() {
-      const res = await request(server).get('/api/businesses/3')
+      const res = await request(server).get('/api/requests/3')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
       expect(res.body.id).toBe(3);
-      expect(res.body.email).toBe("manager@costco.com");
-      expect(res.body.name).toBe("Costco Wholesale");
-      expect(res.body.address).toBe("123 Lots of Stuff Blvd");
-      expect(res.body.description).toBe("A bunch of stuff you want, but way too much of it.");
-      expect(res.body.phone).toBe("(888) 555-8181");
+      expect(res.body.title).toBe("Burritos");
+      expect(res.body.description).toBe("Gourmet Burritos");
+      expect(res.body.quantity).toBe("5");
     });
 
     it('invalid id should return status 400', async function() {
-      const res = await request(server).get('/api/businesses/30')
+      const res = await request(server).get('/api/requests/30')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -88,12 +77,12 @@ describe('businessRouter', function() {
 
   describe('PUT /:id', function() {
     it('return 200 OK', async function() {
-      const res = await request(server).put('/api/businesses/3')
+      const res = await request(server).put('/api/requests/3')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       )
       .send({
-        name: "Roscoe Bowl Sale"
+        title: "Tacos"
       });
 
       expect(res.status).toBe(200);
@@ -101,15 +90,13 @@ describe('businessRouter', function() {
 
     it('saves changes to the database', function() {
       expect(true).toBe(true); // TODO
-      // expect(res.body.name).toBe("Roscoe Bowl Sale");
-      // expect(res.body.message).toBe("perfect");
     });
 
   }); // describe PUT /:id
   
-  describe('DELETE /:id', function() { // FIXME: FAILS
+  describe('DELETE /:id', function() {
     it('valid id returns 200 OK', async function() {
-      const res = await request(server).delete('/api/businesses/4')
+      const res = await request(server).delete('/api/requests/4')
       .set( 
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -118,7 +105,7 @@ describe('businessRouter', function() {
     }); // it
 
     it('invalid id returns 400', async function() {
-      const res = await request(server).delete('/api/businesses/40')
+      const res = await request(server).delete('/api/requests/40')
       .set( 
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -130,4 +117,4 @@ describe('businessRouter', function() {
       expect(true).toBe(true); // TODO
     }) // it
   }); // describe PUT /:id
-}); // describe businessRouter
+}); // describe requestRouter

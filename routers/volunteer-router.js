@@ -28,22 +28,43 @@ router.get('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
   const { id } = req.params;
-  const requestData = req.body;
-  Volunteers.update(id, body)
+  const volunteerData = req.body;
+
+  // TODO: handle password changes
+
+  Volunteers.update(id, volunteerData)
     .then(volunteer => {
-      if (volunteer)
-        res.status(200).json(volunteer)
-      else
-        res.status(400).json({ message: "ID not found" });
+      if (volunteer) {
+        Volunteers.findById(id)
+          .then(newItem => {
+            res.status(200).json(newItem);
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(500).json({ message: `Failed to update database: ${err}`});
+          });
+      }
+      else { res.status(400).json({ message: `Invalid volunteer ID ${id}`});
+      }
     })
-    .catch (err => {
-      console.log(err);
-      res.status(500).json({ message: `Delivery request update error: ${err}`})
+    .catch (error => {
+      // console.log(error);
+      res.status(500).json({ message: `Volunteer update error: ${error}`});
     });
+    //   if (volunteer)
+    //     res.status(200).json(volunteer)
+    //   else
+    //     res.status(400).json({ message: "ID not found" });
+    // })
+    // .catch (err => {
+    //   // console.log(err);
+    //   res.status(500).json({ message: `Delivery request update error: ${err}`})
+    // });
 });
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
+  
   Volunteers.remove(id)
     .then(volunteer => {
       if(volunteer)
@@ -52,8 +73,8 @@ router.delete('/:id', (req, res) => {
         res.status(400).json({ message: "ID not found" });
     })
     .catch (err => {
-      console.log(err);
-      res.status(500).json({ message: `Delivery request could not be deleted: ${err}`});
+      // console.log(err);
+      res.status(500).json({ message: `Volunteer could not be deleted: ${err}`});
     });
 });
 

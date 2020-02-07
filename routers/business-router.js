@@ -33,25 +33,24 @@ router.put('/:id', (req, res) => {
 
   // TODO: handle password changes
 
-  Businesses.update(id, businessData)
-    // .then(business => {
-    //   const newItem = Businesses.findById(id);
-    //   res.status(200).json(newItem);
-    // })
+  Businesses.update(id, businessData) // FIXME: IO Error
     .then(business => {
-      Businesses.findById(id)
-        .then(newItem => {
-          console.log(newItem);
-          res.status(200).json(newItem);
-        })
-        .catch(err => {
-          console.log(err);
-          res.status(500).json({ message: `Updated business retrieval error: ${err}`});
-        });
-    })    
-    .catch (err => {
-      console.log(err);
-      res.status(500).json({ message: `Business update error: ${err}`});
+      if (business) {
+        Businesses.findById(id)
+          .then(newItem => {
+            res.status(200).json(newItem);
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(500).json({ message: `Failed to update database: ${err}`});
+          });
+      }
+      else { res.status(400).json({ message: `Invalid business ID ${id}`});
+      }
+    })
+    .catch (error => {
+      // console.log(error);
+      res.status(500).json({ message: `Business update error: ${error}`});
     });
 });
 
@@ -61,12 +60,12 @@ router.delete('/:id', (req, res) => {
   Businesses.remove(id)
     .then(business => {
       if (business)
-      res.status(200).json({ message: `ID ${id} successfully deleted`});
+        res.status(200).json({ message: `ID ${id} successfully deleted`});
       else
         res.status(400).json({ message: "ID not found" });
     })
     .catch (err => {
-      console.log(err);
+      // console.log(err);
       res.status(500).json({ message: `Business could not be deleted: ${err}`})
     });
 });

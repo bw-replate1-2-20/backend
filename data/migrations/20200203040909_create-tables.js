@@ -31,21 +31,23 @@ exports.up = function(knex) {
           .unsigned()
           .references('id')
           .inTable('Volunteer')
-          .onDelete('RESTRICT')
+          .onDelete('CASCADE')
           .onUpdate('CASCADE');
         tbl.integer('business_id')
           .unsigned()
           .notNullable()
           .references('id')
           .inTable('Business')
-          .onDelete('RESTRICT') // What happens if this ID is deleted.
+          .onDelete('CASCADE') // What happens if this ID is deleted.
           .onUpdate('CASCADE'); // What happens if this ID changes.
       });                       // CASCADE, SET NULL, DO NOTHING, RESTRICT
 };
 
 exports.down = function(knex) {
   return knex.schema
+
   .dropTableIfExists('Request')
-  .dropTableIfExists('Business')
   .dropTableIfExists('Volunteer')
+  .dropTableIfExists('Business')
+
 };

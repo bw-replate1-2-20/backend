@@ -29,8 +29,6 @@ async function add(volunteer) {
 }
 
 async function update(id, businessData) {
-  console.log({id});
-  console.log(businessData);
   return await db('business')
     .where({id})
     .first()

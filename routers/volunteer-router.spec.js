@@ -2,38 +2,38 @@ const server = require('../api/server.js');
 const request = require('supertest');
 const db = require('../data/db-config.js');
 
+const volunteerRouter = ('./volunteer-router.js');
+
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/secrets');
 
 const authenticate = require("../middleware/auth-jest.js");
-const businessRouter = ('./business-router.js');
 
-// EITHER OF THESE LINES CAUSE ALL TESTS TO FAIL.
-// jest.mock("../middleware/auth-jest.js");
-beforeEach(() => db.seed.run());
+// HOW TO KILL FAIL ALL TESTS: UNCOMMENT THE NEXT TWO LINES!
+// beforeEach(testDB);
+// jest.mock("../middleware/auth-jest.js"); // TODO: Why?
+// beforeEach(() => authenticate.mockClear());
+// beforeEach(() => db.seed.run());
+describe('volunteerRouter', function() {
+  // ANOTHER NOVEL WAY TO FAIL ALL THE TESTS
+  // beforeEach(async () => {
+  //   await db('Volunteer').truncate();
+  // }); // FIXME: reset database
 
-
-describe('businessRouter', function() {
-
-  // THIS BLOCK ALSO MAKES EVERY TEST FAIL
-//   beforeEach(async () => {
-//     await db('Business').truncate();
-//   }); // FIXME: reset database
-
-  it('runs the tests', function() {
-    expect(true).toBe(true);
+  it('runs the tests', async function() {
+    await expect(true).toBe(true);
   });
 
   describe ("test environment", function() {
-    it("should use the testing environment", function() {
-      expect(process.env.DB_ENV).toBe("testing");
+    it("should use the testing environment", async function() {
+      await expect(process.env.DB_ENV).toBe("testing");
     });
   });
 
-  describe('GET /', function() {
-    it('missing token should return 401 Forbidden', function() {
+  describe('GET /', function() { // FIXME !! Double up?
+    it('missing token should return 401 Forbidden', async function() {
       // make a GET request to /
-      return request(server).get('/api/businesses')
+      return await request(server).get('/api/volunteers/')
         .then(res => {
         // check that the status code is 401
         expect(res.status).toBe(401);
@@ -44,7 +44,7 @@ describe('businessRouter', function() {
       // authenticate.mockImplementationOnce((req, res, next) => {
       //   next();
       // }) // TODO: Why is this suggested?
-      const res = await request(server).get('/api/businesses')
+      const res = await request(server).get('/api/volunteers')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -55,7 +55,7 @@ describe('businessRouter', function() {
 
   describe('GET /:id', function() {
     it('valid id should return 200 OK', async function() {
-      const res = await request(server).get('/api/businesses/3')
+      const res = await request(server).get('/api/volunteers/3')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -64,20 +64,18 @@ describe('businessRouter', function() {
     });
 
     it('valid id should return correct information', async function() {
-      const res = await request(server).get('/api/businesses/3')
+      const res = await request(server).get('/api/volunteers/3')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
       expect(res.body.id).toBe(3);
-      expect(res.body.email).toBe("manager@costco.com");
-      expect(res.body.name).toBe("Costco Wholesale");
-      expect(res.body.address).toBe("123 Lots of Stuff Blvd");
-      expect(res.body.description).toBe("A bunch of stuff you want, but way too much of it.");
-      expect(res.body.phone).toBe("(888) 555-8181");
+      expect(res.body.email).toBe("bike@couriers.com");
+      expect(res.body.name).toBe("Free food bike couriers");
+      expect(res.body.phone).toBe("333-333-3333");
     });
 
     it('invalid id should return status 400', async function() {
-      const res = await request(server).get('/api/businesses/30')
+      const res = await request(server).get('/api/volunteers/30')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       );
@@ -86,14 +84,14 @@ describe('businessRouter', function() {
 
   }); // describe GET /:id
 
-  describe('PUT /:id', function() {
-    it('return 200 OK', async function() {
-      const res = await request(server).put('/api/businesses/3')
+  describe('PUT /:id', function() { // FIXME: FAILS
+    it('should return 200 OK', async function() {
+      const res = await request(server).put('/api/volunteers/1')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
       )
       .send({
-        name: "Roscoe Bowl Sale"
+        name: "Expensive food bike couriers"
       });
 
       expect(res.status).toBe(200);
@@ -107,22 +105,20 @@ describe('businessRouter', function() {
 
   }); // describe PUT /:id
   
-  describe('DELETE /:id', function() { // FIXME: FAILS
+  describe('DELETE /:id', function() {
     it('valid id returns 200 OK', async function() {
-      const res = await request(server).delete('/api/businesses/4')
-      .set( 
-        "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
-      );
-
+      const res = await request(server).delete('/api/volunteers/2')
+        .set( 
+          "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
+        );
       expect(res.status).toBe(200);
     }); // it
 
     it('invalid id returns 400', async function() {
-      const res = await request(server).delete('/api/businesses/40')
-      .set( 
-        "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
-      );
-
+      const res = await request(server).delete('/api/volunteers/20')
+        .set( 
+          "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
+        );
       expect(res.status).toBe(400);
     }); // it
 
@@ -130,4 +126,4 @@ describe('businessRouter', function() {
       expect(true).toBe(true); // TODO
     }) // it
   }); // describe PUT /:id
-}); // describe businessRouter
+}); // describe volunteerRouter
