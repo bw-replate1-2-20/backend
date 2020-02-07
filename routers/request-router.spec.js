@@ -32,9 +32,6 @@ describe('requestRouter', function() {
     });
 
     it('valid token should return 200 OK', async function() {
-      // authenticate.mockImplementationOnce((req, res, next) => {
-      //   next();
-      // }) // TODO: Why is this suggested?
       const res = await request(server).get('/api/requests')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
@@ -74,6 +71,8 @@ describe('requestRouter', function() {
     });
 
   }); // describe GET /:id
+
+  // TODO: ADD POST TESTS!
 
   describe('PUT /:id', function() {
     it('return 200 OK', async function() {

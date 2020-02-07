@@ -8,7 +8,6 @@ const BUSINESS  = 'B';
 router.get('/', (req, res) => {
   const token = req.headers.authorization;
   const decoded = jwt.decode(token, {complete: true});
-  console.log(decoded);
   const role = decoded.payload.role;
   const current_id = decoded.payload.sub;
 
@@ -49,7 +48,6 @@ router.get('/:id', (req, res) => {
   const { id } = req.params;
   Requests.findById(id)
     .then(request => {
-      console.log(request);
       if (request)
         res.json(request);
       else
@@ -83,16 +81,13 @@ router.put('/:id', (req, res) => {
     .then(request => {
       Requests.findById(id)
         .then(newItem => {
-          console.log(newItem);
           res.status(200).json(newItem);
         })
         .catch(err => {
-          console.log(err);
           res.status(500).json({ message: `New delivery request retrieval error: ${err}`});
         });
       })
     .catch (err => {
-      console.log(err);
       res.status(500).json({ message: `Delivery request update error: ${err}`})
     })
 });
@@ -108,7 +103,6 @@ router.delete('/:id', (req, res) => {
         res.status(400).json({ message: 'ID not found'});
     })
     .catch (err => {
-      console.log(err);
       res.status(500).json({ message: `Delivery request could not be deleted: ${err}`})
     });
 });

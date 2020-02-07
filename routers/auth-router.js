@@ -75,6 +75,7 @@ router.post('/register/business', (req, res) => {
       });
   })
   .catch(error => {
+    // FIXME: potential problem with resending header
       res.status(500).json(error);
   });
 });
