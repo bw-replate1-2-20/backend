@@ -63,6 +63,7 @@ Many businesses have leftover food at the end of the day. The Replate app makes 
 |**POST** /api/auth/register/business|{email*<br>password*<br>name*<br>address*<br>description*<br>phone*<br>}|**Status: 201** (Created)<br>{<br>email<br>name<br>address<br>description<br>phone<br>JWT token<br>}|
 |**PUT** /api/businesses/:id|{ any field(s) }|**Status: 200** (OK)<br>{ business object }|
 |**DELETE** /api/businesses/:id \*\*||**Status: 200** (OK)<br>No body|
+
 \*\*Warning: Deleting businesses may render associated delivery requests invalid.
 
 
