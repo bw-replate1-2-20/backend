@@ -9,16 +9,7 @@ const { jwtSecret } = require('../config/secrets');
 
 const authenticate = require("../middleware/auth-jest.js");
 
-// HOW TO KILL FAIL ALL TESTS: UNCOMMENT THE NEXT TWO LINES!
-// beforeEach(testDB);
-// jest.mock("../middleware/auth-jest.js"); // TODO: Why?
-// beforeEach(() => authenticate.mockClear());
-// beforeEach(() => db.seed.run());
 describe('volunteerRouter', function() {
-  // ANOTHER NOVEL WAY TO FAIL ALL THE TESTS
-  // beforeEach(async () => {
-  //   await db('Volunteer').truncate();
-  // }); // FIXME: reset database
 
   it('runs the tests', async function() {
     await expect(true).toBe(true);
@@ -30,7 +21,7 @@ describe('volunteerRouter', function() {
     });
   });
 
-  describe('GET /', function() { // FIXME !! Double up?
+  describe('GET /', function() {
     it('missing token should return 401 Forbidden', async function() {
       // make a GET request to /
       return await request(server).get('/api/volunteers/')
@@ -41,9 +32,6 @@ describe('volunteerRouter', function() {
     });
 
     it('valid token should return 200 OK', async function() {
-      // authenticate.mockImplementationOnce((req, res, next) => {
-      //   next();
-      // }) // TODO: Why is this suggested?
       const res = await request(server).get('/api/volunteers')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
@@ -84,7 +72,7 @@ describe('volunteerRouter', function() {
 
   }); // describe GET /:id
 
-  describe('PUT /:id', function() { // FIXME: FAILS
+  describe('PUT /:id', function() {
     it('should return 200 OK', async function() {
       const res = await request(server).put('/api/volunteers/1')
       .set(
@@ -98,7 +86,7 @@ describe('volunteerRouter', function() {
     }); // it
 
     it('saves changes to the database', function() {
-      expect(true).toBe(true); // TODO
+      expect(true).toBe(true); // TODO - needs to be moved with auto-seeding
       // expect(res.body.name).toBe("Roscoe Bowl Sale");
       // expect(res.body.message).toBe("perfect");
     });
@@ -123,7 +111,7 @@ describe('volunteerRouter', function() {
     }); // it
 
     it('deleted item is no longer in the database', function() {
-      expect(true).toBe(true); // TODO
+      expect(true).toBe(true); // TODO - needs to be moved with auto-seeding
     }) // it
   }); // describe PUT /:id
 }); // describe volunteerRouter

@@ -34,7 +34,7 @@ Many businesses have leftover food at the end of the day. The Replate app makes 
 |   Route   |         Input Data         | Expected Return |
 | --------- | -------------------------- | --------------- |
 |**POST** /api/auth/register/volunteer|{<br>email*<br>password*<br>name*<br>phone*<br>}|**Status: 201** (Created)<br>{<br>email<br>name<br>phone<br>JWT token<br>}|
-|**POST** /api/auth/register/business|{email*<br>password*<br>name*<br>address*<br>description*<br>phone*br>}|**Status: 201** (Created)<br>{<br>email<br>name<br>address<br>description<br>phone<br>JWT token<br>}|
+|**POST** /api/auth/register/business|{<br>email*<br>password*<br>name*<br>address*<br>description*<br>phone*<br>}|**Status: 201** (Created)<br>{<br>email<br>name<br>address<br>description<br>phone<br>JWT token<br>}|
 
 #### Login
 

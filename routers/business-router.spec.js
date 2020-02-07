@@ -8,17 +8,10 @@ const { jwtSecret } = require('../config/secrets');
 const authenticate = require("../middleware/auth-jest.js");
 const businessRouter = ('./business-router.js');
 
-// EITHER OF THESE LINES CAUSE ALL TESTS TO FAIL.
-// jest.mock("../middleware/auth-jest.js");
 beforeEach(() => db.seed.run());
 
 
 describe('businessRouter', function() {
-
-  // THIS BLOCK ALSO MAKES EVERY TEST FAIL
-//   beforeEach(async () => {
-//     await db('Business').truncate();
-//   }); // FIXME: reset database
 
   it('runs the tests', function() {
     expect(true).toBe(true);
@@ -41,9 +34,7 @@ describe('businessRouter', function() {
     });
 
     it('valid token should return 200 OK', async function() {
-      // authenticate.mockImplementationOnce((req, res, next) => {
-      //   next();
-      // }) // TODO: Why is this suggested?
+
       const res = await request(server).get('/api/businesses')
       .set(
         "Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjMsInJvbGUiOiJCIiwiZW1haWwiOiJtYW5hZ2VyQGNvc3Rjby5jb20iLCJpYXQiOjE1ODEwMzgyNzksImV4cCI6MTU4MTEyNDY3OX0.pCwCklyfVQ2Y4wzaPQF_zKo4rzWBg7jHNtVUjcxkZpY"
@@ -100,14 +91,14 @@ describe('businessRouter', function() {
     }); // it
 
     it('saves changes to the database', function() {
-      expect(true).toBe(true); // TODO
+      expect(true).toBe(true); // TODO - With auto-seed, this test needs to be moved.
       // expect(res.body.name).toBe("Roscoe Bowl Sale");
       // expect(res.body.message).toBe("perfect");
     });
 
   }); // describe PUT /:id
   
-  describe('DELETE /:id', function() { // FIXME: FAILS
+  describe('DELETE /:id', function() {
     it('valid id returns 200 OK', async function() {
       const res = await request(server).delete('/api/businesses/4')
       .set( 
@@ -127,7 +118,7 @@ describe('businessRouter', function() {
     }); // it
 
     it('deleted item is no longer in the database', function() {
-      expect(true).toBe(true); // TODO
+      expect(true).toBe(true); // TODO: With auto-seed, this needs to be re-configured
     }) // it
   }); // describe PUT /:id
 }); // describe businessRouter
